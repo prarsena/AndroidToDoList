@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textSize="18sp"
         android:format12Hour="hh:mm:ss a" />
 
     <EditText
@@ -16,13 +17,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/demoStyle"
-        android:hint="Enter an activity"
+        android:hint="Enter text here.."
         />
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:drawSelectorOnTop="false" />
+        android:drawSelectorOnTop="false"
+        android:layout_margin="15dp" />
 
 </LinearLayout>

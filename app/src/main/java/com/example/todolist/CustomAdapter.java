@@ -21,6 +21,12 @@ public class CustomAdapter extends ArrayAdapter {
         this.arrayList = arrayList;
     }
 
+    /* This Custom Adapter sets a custom view for each row of the ArrayList.
+    *  If I extend <ActivityData>, this view could be amended to show
+    *  other attributes of each ActivityData object.
+    *
+    *  Currently, it sets the position number and name of the activity
+    *  for each row. */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -31,7 +37,7 @@ public class CustomAdapter extends ArrayAdapter {
         activityPosition = convertView.findViewById(R.id.activityPosition);
         activityName = convertView.findViewById(R.id.activityName);
 
-        activityPosition.setText(" " + arrayList.get(position).getPosition());
+        activityPosition.setText(" " + (position + 1));
         activityName.setText(arrayList.get(position).getActivity());
         return convertView;
     }
