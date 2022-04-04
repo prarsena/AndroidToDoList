@@ -12,6 +12,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -21,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private int pos;
     public ArrayList<ActivityData> items;
     CustomAdapter adapter;
+    private final String file = "list.txt";
+    private OutputStreamWriter out;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,9 +48,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         /* Populate the initial ArrayList.
         *  The <ActivityData> type could be extended in the future. */
         items = new ArrayList<ActivityData>();
-        items.add(new ActivityData("Study"));
-        items.add(new ActivityData("Shop"));
-        items.add(new ActivityData("Sleep"));
+        //open stream for reading from file
+        InputStream in = null;
+        if (file != null){
+            try {
+                in = openFileInput(file);
+                InputStreamReader isr = new InputStreamReader(in);
+                BufferedReader reader = new BufferedReader(isr);
+                String str = null;
+
+                int count = 0;
+                while ((str = reader.readLine()) != null) {
+                    count++; // count number of records read
+                    items.add(new ActivityData(str));
+                }
+                // toast how many records read
+                Toast.makeText(this,
+                        Integer.valueOf(count) + " records read",
+                        Toast.LENGTH_LONG).show();
+
+                //close input stream
+                reader.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            items.add(new ActivityData("Study"));
+            items.add(new ActivityData("Shop"));
+            items.add(new ActivityData("Sleep"));
+        }
 
         /* Instantiate an instance of the CustomAdapter class. */
         adapter = new CustomAdapter(this, items);
@@ -109,16 +145,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 return true;
 
             case R.id.save:
-                /* Nothing yet. */
+                adapter.notifyDataSetChanged();
+                writeToListFile(items);
                 return true;
 
             case R.id.exit:
+                writeToListFile(items);
                 /* Exit activity. */
                 finish();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void writeToListFile(ArrayList<ActivityData> items) {
+        try {
+            int recordCount = 0;
+            //open output stream
+            out = new OutputStreamWriter(openFileOutput(file, MODE_PRIVATE)); // also try MODE_APPEND
+            for (ActivityData line : items) {
+                out.write(line.getActivity() + " \n");
+                Log.e("File IO", "Wrote "+line.getActivity()+" to file.");
+                recordCount++;
+            }
+            Toast.makeText(this, "Wrote " +
+                    Integer.valueOf(recordCount) + " records to file.",
+                    Toast.LENGTH_LONG).show();
+            //close output stream
+            out.close();
+        } catch (IOException e) {
+            Log.e("IOTest", e.getMessage());
         }
     }
 }
