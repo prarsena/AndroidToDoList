@@ -16,6 +16,7 @@
         android:id="@+id/listitem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textCapSentences"
         style="@style/demoStyle"
         android:hint="Enter text here.."
         />
@@ -24,7 +25,9 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:drawSelectorOnTop="false"
-        android:layout_margin="15dp" />
+        android:layout_margin="15dp"
+        android:divider="@color/black"
+        android:dividerHeight="1dp"
+        android:drawSelectorOnTop="true" />
 
 </LinearLayout>
